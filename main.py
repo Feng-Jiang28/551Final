@@ -119,6 +119,30 @@ def aggregate_data(file_name, column_index, agg_function):
     elif agg_function == 'avg':
         return sum(values) / len(values) if values else 0
 
+def join_tables(file_name1, file_name2, join_column_index1, join_column_index2, selected_columns=None):
+    with open(f"dbs/{file_name1}.csv", 'r') as file1, open(f"dbs/{file_name2}.csv", 'r') as file2:
+        # Read and split lines from both files
+        data1 = [line.strip().split(',') for line in file1.readlines()]
+        data2 = [line.strip().split(',') for line in file2.readlines()]
+
+    # Create a dictionary for the second table for faster lookups
+    dict2 = {row[join_column_index2]: row for row in data2}
+
+    # Perform the join
+    joined_data = []
+    for row1 in data1:
+        key = row1[join_column_index1]
+        if key in dict2:
+            combined_row = row1 + dict2[key]
+            if selected_columns:
+                combined_row = [combined_row[i] for i in selected_columns]
+            joined_data.append(combined_row)
+
+    # Print the joined data
+    for row in joined_data:
+        print(','.join(row))
+
+
 def parse_and_execute(query):
     commands = query.split(' ')
     # new table employees
@@ -190,6 +214,15 @@ def parse_and_execute(query):
         column_index = int(commands[3])
         order = commands[4] if len(commands) > 4 else 'asc'
         order_data(f"{table_name}", column_index, order)
+
+    # join employees and salaries on 0 and 1 print 0,1,2
+    elif commands[0].lower() == 'join':
+        file_name1 = commands[1]
+        file_name2 = commands[2]
+        join_column_index1 = int(commands[4])
+        join_column_index2 = int(commands[5])
+        selected_columns = [int(idx) for idx in commands[7:]] if 'print' in query else None
+        join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_index1, join_column_index2, selected_columns)
     else:
         print("Invalid query")
 

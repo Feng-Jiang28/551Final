@@ -10,3 +10,8 @@ delete from employees where col 2 = 30
 order employees by 0 desc
 order employees by 0 asc
 update employees set 1=John, 2=35 where col 0 = 1
+
+
+insert into salaries values 1,50000,Engineering
+insert into salaries values 2,55000,Marketing
+insert into salaries values 3,45000,Human Resources
