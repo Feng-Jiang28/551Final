@@ -1,0 +1,12 @@
+new table employees
+insert into employees values 1,John,30
+insert into employees values 2,Tom,20
+insert into employees values 3,Amy,25
+give 0,1,2 from table employees where col 2 >= 25
+give 0,1,2 from table employees where col 2 < 25
+give 0,1,2 from table employees where col 2 = 25
+delete from employees where col 2 = 30
+
+order employees by 0 desc
+order employees by 0 asc
+update employees set 1=John, 2=35 where col 0 = 1
