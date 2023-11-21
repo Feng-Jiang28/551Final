@@ -1,5 +1,7 @@
 import os
 import cmd
+import csv
+from collections import defaultdict
 
 def ensure_db_directory():
     if not os.path.exists('dbs'):
@@ -165,6 +167,22 @@ def join_tables(file_name1, file_name2, join_column_name, selected_columns=None)
         for row in joined_data:
             print(','.join(row))
 
+def group_data(file_name, group_by_column, print_columns):
+    grouped_data = defaultdict(list)
+    with open(f"{file_name}", mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            group_key = row[group_by_column]
+            grouped_data[group_key].append({col: row[col] for col in print_columns})
+
+    # Print grouped data
+    # for group, rows in grouped_data.items():
+    #     print(f"Group: {group}")
+    #     for row in rows:
+    #         print(', '.join(f"{key}: {value}" for key, value in row.items()))
+    #     print()  # Empty line for better separation between groups
+
+    return grouped_data
 
 def parse_and_execute(query):
     commands = query.split(' ')
@@ -251,6 +269,20 @@ def parse_and_execute(query):
             print_columns = query.split('print')[1].strip().split(',')
             selected_columns = [col.strip() for col in print_columns]  # List of 'table.column' strings
         join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_name, selected_columns)
+
+    elif commands[0].lower() == 'group':
+        group_by_column = commands[1]
+        table_name_index = commands.index('from') + 1
+        table_name = commands[table_name_index]
+        print_columns_index = commands.index('print') + 1
+        print_columns = commands[print_columns_index:]
+
+        grouped_data = group_data(f"dbs/{table_name}.csv", group_by_column, print_columns)
+
+        for key, rows in grouped_data.items():
+            print(f"Group: {key}")
+            for row in rows:
+                print(', '.join([f"{col}: {row[col]}" for col in row]))
     else:
         print("Invalid query")
 
