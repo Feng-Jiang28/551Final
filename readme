@@ -25,7 +25,7 @@ renew company_employee_details put id=520,company=google,department=IT,employee_
 give company,department from table company_employee_details where years_in_company > 5
 order company_employee_details by id asc
 aggregate avg from company_employee_details by age
-
+complex company_employee_details.company,company_employee_details.department,company_employees_salaries.salary from table company_employee_details join company_employees_salaries where years_in_company > 5 order by salary asc
 
 
 

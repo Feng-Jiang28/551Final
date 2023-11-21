@@ -3,9 +3,11 @@ import cmd
 import csv
 from collections import defaultdict
 
+
 def ensure_db_directory():
     if not os.path.exists('dbs'):
         os.makedirs('dbs')
+
 
 def create_table(table_name, headers):
     ensure_db_directory()
@@ -17,11 +19,13 @@ def create_table(table_name, headers):
     else:
         print(f"Table {table_name} already exists.")
 
+
 # insert into employees values 1,John,30
 def insert_data(file_name, data):
     with open(f"dbs/{file_name}.csv", 'a') as file:
         file.write(f"{data}\n")
         print(f"Data inserted into {file_name}.")
+
 
 def is_condition_met(value, operator, condition_value):
     if operator == '=':
@@ -36,6 +40,7 @@ def is_condition_met(value, operator, condition_value):
         return value <= condition_value
     else:
         raise ValueError(f"Unknown operator: {operator}")
+
 
 # query_data("employees.csv", [0 1 2], [2 >= 25])
 def query_data(file_name, column_names, condition=None):
@@ -53,12 +58,13 @@ def query_data(file_name, column_names, condition=None):
             selected_values = [values[i] for i in column_indices]
             print(','.join(selected_values))
 
+
 def delete_data(file_name, condition):
     print(condition)
     updated_lines = []
     with open(f"dbs/{file_name}.csv", 'r') as file:
-        header = next(file).strip().split(',') # Save the header
-        condition_column_index = header.index(condition[0]) # Convert condition column name to index
+        header = next(file).strip().split(',')  # Save the header
+        condition_column_index = header.index(condition[0])  # Convert condition column name to index
 
         for line in file:
             values = line.strip().split(',')
@@ -68,9 +74,44 @@ def delete_data(file_name, condition):
             updated_lines.append(line)
 
     with open(f"dbs/{file_name}.csv", 'w') as file:
-        file.write(','.join(header) + '\n') # Write the header back
+        file.write(','.join(header) + '\n')  # Write the header back
         for line in updated_lines:
             file.write(line)
+
+
+# Lazy Reading for Querying Data
+def query_data_lazy(file_name, column_names, condition=None):
+    with open(f"dbs/{file_name}", 'r') as file:
+        header = file.readline().strip().split(',')
+        column_indices = [header.index(name) for name in column_names]
+
+        for line in file:
+            values = line.strip().split(',')
+            if condition:
+                condition_column_name, operator, condition_value = condition
+                condition_column_index = header.index(condition_column_name)
+                if not is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
+                    continue
+            selected_values = [values[i] for i in column_indices]
+            yield ','.join(selected_values)
+
+
+buffer_limit = 100
+data_buffer = []
+
+
+# Buffered Writing for Inserting Data
+def insert_data_buffered(file_name, data):
+    data_buffer.append(data)
+    if len(data_buffer) >= buffer_limit:
+        flush_buffer(file_name)
+
+
+def flush_buffer(file_name):
+    with open(f"dbs/{file_name}.csv", 'a') as file:
+        for data in data_buffer:
+            file.write(f"{data}\n")
+    data_buffer.clear()
 
 
 def update_data(file_name, condition, updates):
@@ -95,6 +136,7 @@ def update_data(file_name, condition, updates):
         for line in updated_lines:
             file.write(line + '\n')
 
+
 def order_data(file_name, column_name, order='asc'):
     with open(f"dbs/{file_name}.csv", 'r') as file:
         header = next(file).strip().split(',')  # Read the header
@@ -104,7 +146,8 @@ def order_data(file_name, column_name, order='asc'):
         data = [line.strip().split(',') for line in file.readlines()]
 
         # Sorting the data based on the specified column
-        data.sort(key=lambda row: float(row[column_index]) if row[column_index].replace('.','',1).isdigit() else row[column_index],
+        data.sort(key=lambda row: float(row[column_index]) if row[column_index].replace('.', '', 1).isdigit() else row[
+            column_index],
                   reverse=(order.lower() == 'desc'))
 
         # Print the sorted data
@@ -133,6 +176,8 @@ def aggregate_data(file_name, column_name, agg_function):
         return min(values)
     elif agg_function == 'avg':
         return sum(values) / len(values) if values else 0
+
+
 def join_tables(file_name1, file_name2, join_column_name, selected_columns=None):
     with open(f"dbs/{file_name1}", 'r') as file1, open(f"dbs/{file_name2}", 'r') as file2:
         header1 = next(file1).strip().split(',')
@@ -167,6 +212,7 @@ def join_tables(file_name1, file_name2, join_column_name, selected_columns=None)
         for row in joined_data:
             print(','.join(row))
 
+
 def group_data(file_name, group_by_column, print_columns):
     grouped_data = defaultdict(list)
     with open(f"{file_name}", mode='r') as file:
@@ -183,6 +229,39 @@ def group_data(file_name, group_by_column, print_columns):
     #     print()  # Empty line for better separation between groups
 
     return grouped_data
+
+
+def complex_query_execute(file_name1, file_name2, join_column_name, condition, selected_columns, order_column,
+                          order='asc'):
+    # Join, filter, and order the data from two CSV files
+    with open(file_name1, mode='r') as file1, open(file_name2, mode='r') as file2:
+        reader1 = csv.DictReader(file1)
+        reader2 = csv.DictReader(file2)
+        data1 = [row for row in reader1]
+        data2 = {row[join_column_name]: row for row in reader2}
+
+        # Joining data
+        joined_data = []
+        for row1 in data1:
+            key = row1[join_column_name]
+            if key in data2:
+                joined_row = {**row1, **data2[key]}
+                joined_data.append(joined_row)
+
+        # Filtering data based on the condition
+        condition_column, operator, condition_value = condition
+        filtered_data = [row for row in joined_data if
+                         float(row[condition_column]) > float(condition_value)]  # Assuming '>'
+
+        # Sorting the data
+        ascending = order.lower() == 'asc'
+        filtered_data.sort(key=lambda x: float(x[order_column]), reverse=not ascending)
+
+        # Selecting and printing specified columns
+        for row in filtered_data:
+            selected_row = [row[col] for col in selected_columns]
+            print(', '.join(selected_row))
+
 
 def parse_and_execute(query):
     commands = query.split(' ')
@@ -283,8 +362,30 @@ def parse_and_execute(query):
             print(f"Group: {key}")
             for row in rows:
                 print(', '.join([f"{col}: {row[col]}" for col in row]))
+
+    # complex company_employee_details.company,company_employee_details.department,company_employees_salaries.salary from table company_employee_details join company_employees_salaries where years_in_company > 5 order by salary asc
+    elif commands[0].lower() == "complex":
+        parts = query.split(' ', 4)  # Splitting only first four words to handle complex queries
+        selected_columns = parts[2].split(',')
+        table1, join_op, table2 = parts[4].split(' join ')
+        join_column = join_op.split(' ')[-1]
+        where_clause = ' '.join(parts[4].split(' where ')[1:])
+        condition_str, order_clause = where_clause.split(' order by ')
+        order_column, order_direction = order_clause.split(' ')
+
+        # Correcting file paths
+        file1 = f"dbs/{table1}.csv"
+        file2 = f"dbs/{table2}.csv"
+
+        # Parsing condition string
+        condition_column, operator, condition_value = condition_str.split(' ')
+        condition = (condition_column.strip(), operator.strip(), condition_value.strip())
+
+        complex_query_execute(file1, file2, join_column, condition, selected_columns, order_column, order_direction)
+
     else:
         print("Invalid query")
+
 
 class FileDBCLI(cmd.Cmd):
     prompt = 'FileDB > '
@@ -298,6 +399,7 @@ class FileDBCLI(cmd.Cmd):
         if inp.lower() == 'exit':
             return self.do_exit(inp)
         parse_and_execute(inp)
+
 
 if __name__ == '__main__':
     FileDBCLI().cmdloop()
