@@ -97,7 +97,7 @@ def order_data(file_name, column_name, order='asc'):
     with open(f"dbs/{file_name}.csv", 'r') as file:
         header = next(file).strip().split(',')  # Read the header
         column_index = header.index(column_name)  # Find index of the column name
-
+        print(column_index)
         # Processing the data lines
         data = [line.strip().split(',') for line in file.readlines()]
 
@@ -174,11 +174,11 @@ def parse_and_execute(query):
         headers = commands[3:]
         create_table(table_name, headers)
     # insert into employees values 1 John 30
-    elif commands[0].lower() == 'insert':
+    elif commands[0].lower() == 'put':
         insert_data(commands[1], ','.join(commands[2:]))
 
     # delete from employees where age = 30
-    elif commands[0].lower() == 'delete':
+    elif commands[0].lower() == 'remove':
         table_name = commands[2]
         condition_parts = query.split(' where ')[1].split(' ')
         condition = (condition_parts[0], condition_parts[1], condition_parts[2])
@@ -186,9 +186,9 @@ def parse_and_execute(query):
         print(f"Data deleted from {table_name}.")
 
     # update employees set 1=John, 2=35 where col 0 = 1
-    elif commands[0].lower() == 'update':
+    elif commands[0].lower() == 'renew':
         table_name = commands[1]
-        set_clause = query.split(' set ')[1].split(' where ')[0]
+        set_clause = query.split(' put ')[1].split(' where ')[0]
         where_clause = query.split(' where ')[1]
 
         # Parsing the SET clause

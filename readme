@@ -1,21 +1,33 @@
 new table employees id name age
 new table salaries id salary department
 
-insert employees 1 John 30
-insert employees 2 Tom 20
-insert employees 3 Amy 25
+put employees 1 John 30
+put employees 2 Tom 20
+put employees 3 Amy 25
 
-insert salaries 1 50000 Engineering
-insert salaries 2 55000 Marketing
-insert salaries 3 52000 Marketing2
+put salaries 1 50000 Engineering
+put salaries 2 55000 Marketing
+put salaries 3 52000 Marketing2
 
 give name,age from table employees where age >= 25
-delete from employees where age = 30
-update employees set name=John,age=35 where id = 1
+remove of employees where age = 30
+renew employees put name=John,age=35 where id = 1
 order employees by id desc
-aggregate sum from employees on age
+group age from employees print name age
+aggregate sum from employees by age
+join employees and salaries id print employees.name,employees.age,salaries.salary
 
-join employees and salaries id print employees.name
+https://www.kaggle.com/datasets/iqmansingh/company-employee-dataset
+
+put company_employee_details 521 Glasses BigData 25 30 26 4
+remove of company_employee_details where id = 521
+renew company_employee_details put id=520,company=google,department=IT,employee_id=7,age_when_joined=20,years_in_company=7 where id = 520
+give company,department from table company_employee_details where years_in_company > 5
+order company_employee_details by id asc
+aggregate avg from company_employee_details by age
+
+
+
 
 
 

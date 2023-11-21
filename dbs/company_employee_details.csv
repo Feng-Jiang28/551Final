@@ -1,0 +1,522 @@
+id,company,department,employee_id,age,age_when_joined,years_in_company
+0,Glasses,BigData,16,41,38,3
+1,Glasses,AI,56,44,42,2
+2,Cheerper,Support,59,41,40,1
+3,Glasses,Design,40,39,32,7
+4,Glasses,Search Engine,47,30,22,9
+5,Cheerper,BigData,13,30,22,7
+6,Glasses,Design,34,30,22,7
+7,Glasses,Search Engine,53,35,30,5
+8,Cheerper,BigData,46,49,36,9
+9,Pear,Design,56,49,48,1
+10,Cheerper,Support,30,36,24,9
+11,Glasses,Search Engine,31,45,40,5
+12,Glasses,Search Engine,40,45,40,5
+13,Pear,Design,1,38,35,4
+14,Cheerper,Search Engine,25,36,29,7
+15,Glasses,Search Engine,36,31,24,7
+16,Cheerper,Support,71,45,42,3
+17,Glasses,Support,34,34,31,2
+18,Glasses,Search Engine,40,38,34,5
+19,Pear,Sales,26,34,33,1
+20,Glasses,Design,1,30,22,7
+21,Cheerper,AI,3,44,40,4
+22,Cheerper,Support,37,41,38,3
+23,Cheerper,Support,1,35,26,9
+24,Glasses,AI,33,40,39,1
+25,Pear,Design,70,41,38,2
+26,Glasses,Search Engine,26,42,38,4
+27,Cheerper,BigData,21,48,45,3
+28,Glasses,Design,66,49,48,2
+29,Pear,Sales,1,35,32,3
+30,Glasses,Search Engine,47,33,31,2
+31,Glasses,Search Engine,1,34,28,5
+32,Pear,Sales,1,37,31,6
+33,Glasses,AI,8,30,24,5
+34,Pear,AI,27,34,30,4
+35,Pear,Design,16,39,39,1
+36,Cheerper,Support,53,39,37,2
+37,Cheerper,BigData,41,41,36,5
+38,Glasses,BigData,1,42,34,7
+39,Glasses,Search Engine,3,30,25,5
+40,Glasses,AI,1,30,26,3
+41,Cheerper,Search Engine,23,34,24,9
+42,Glasses,Search Engine,1,30,29,2
+43,Cheerper,BigData,7,41,37,4
+44,Glasses,AI,36,44,41,4
+45,Glasses,Design,49,46,43,4
+46,Glasses,BigData,41,30,24,5
+47,Glasses,AI,1,30,22,8
+48,Cheerper,BigData,6,30,22,5
+49,Glasses,AI,8,45,38,7
+50,Cheerper,Support,1,38,32,6
+51,Cheerper,AI,41,30,22,9
+52,Glasses,Design,1,30,24,5
+53,Cheerper,Search Engine,28,30,23,7
+54,Glasses,AI,15,44,42,2
+55,Glasses,BigData,10,31,27,5
+56,Glasses,Search Engine,21,30,24,6
+57,Glasses,Design,1,30,22,8
+58,Pear,Sales,4,38,33,6
+59,Pear,Sales,27,41,39,2
+60,Glasses,AI,61,30,26,4
+61,Cheerper,Support,36,35,27,8
+62,Glasses,AI,26,35,28,8
+63,Glasses,AI,56,47,43,4
+64,Cheerper,Support,80,35,25,9
+65,Glasses,Search Engine,31,35,30,6
+66,Cheerper,BigData,46,43,35,7
+67,Glasses,AI,19,34,31,3
+68,Cheerper,Search Engine,1,32,22,9
+69,Pear,Design,30,46,40,6
+70,Pear,AI,46,32,29,3
+71,Cheerper,Support,76,49,48,2
+72,Cheerper,Support,4,30,22,8
+73,Cheerper,Support,51,31,28,3
+74,Glasses,Search Engine,29,37,32,5
+75,Pear,Sales,45,44,45,1
+76,Cheerper,BigData,28,37,29,8
+77,Glasses,Search Engine,1,31,23,8
+78,Cheerper,BigData,16,37,30,8
+79,Glasses,AI,11,33,30,3
+80,Cheerper,Support,21,46,37,9
+81,Glasses,Search Engine,30,45,39,6
+82,Cheerper,Support,1,34,27,7
+83,Glasses,Search Engine,1,46,43,3
+84,Glasses,AI,36,38,34,5
+85,Glasses,AI,70,38,41,1
+86,Pear,Design,63,45,42,3
+87,Pear,Design,35,40,43,1
+88,Glasses,Search Engine,67,37,38,1
+89,Pear,Sales,22,44,40,4
+90,Cheerper,BigData,30,36,26,9
+91,Cheerper,BigData,20,47,46,1
+92,Cheerper,Support,80,30,22,9
+93,Cheerper,Support,11,31,22,9
+94,Pear,Design,46,42,46,1
+95,Cheerper,BigData,1,38,27,9
+96,Cheerper,Support,32,30,22,8
+97,Glasses,Search Engine,23,30,25,3
+98,Pear,Design,12,39,37,2
+99,Pear,Sales,38,47,42,5
+100,Pear,Sales,45,32,28,4
+101,Cheerper,BigData,5,35,29,6
+102,Glasses,AI,40,46,45,1
+103,Glasses,Design,48,37,34,3
+104,Cheerper,BigData,34,44,38,6
+105,Cheerper,BigData,22,42,36,6
+106,Pear,AI,8,31,27,4
+107,Glasses,Search Engine,28,39,30,8
+108,Pear,Design,72,45,42,3
+109,Pear,Sales,63,47,46,2
+110,Glasses,Search Engine,52,38,39,1
+111,Glasses,AI,35,36,31,5
+112,Glasses,AI,6,30,26,4
+113,Pear,Design,20,41,40,1
+114,Pear,Design,52,36,35,1
+115,Glasses,Design,6,39,34,5
+116,Glasses,Search Engine,9,30,22,8
+117,Glasses,AI,57,40,41,1
+118,Cheerper,Support,49,35,34,2
+119,Glasses,Search Engine,80,49,48,2
+120,Cheerper,AI,1,40,31,9
+121,Cheerper,Support,25,41,34,7
+122,Glasses,Search Engine,51,39,32,7
+123,Pear,Design,1,31,22,8
+124,Pear,Design,39,49,48,1
+125,Cheerper,BigData,37,49,48,1
+126,Glasses,BigData,69,48,48,1
+127,Cheerper,Support,70,38,37,1
+128,Glasses,Search Engine,1,30,22,9
+129,Glasses,Design,25,31,22,9
+130,Glasses,Design,35,35,26,9
+131,Cheerper,BigData,18,30,22,9
+132,Cheerper,Search Engine,1,33,26,7
+133,Glasses,AI,32,42,44,1
+134,Cheerper,Support,27,32,26,6
+135,Glasses,AI,7,38,33,5
+136,Glasses,BigData,37,34,30,4
+137,Glasses,AI,27,49,48,1
+138,Pear,Sales,55,41,37,4
+139,Glasses,Search Engine,42,32,27,6
+140,Glasses,Search Engine,55,35,31,4
+141,Pear,Design,21,30,24,5
+142,Glasses,Search Engine,1,30,22,6
+143,Pear,Sales,46,41,43,1
+144,Glasses,AI,46,49,48,2
+145,Glasses,Search Engine,43,41,40,1
+146,Glasses,Search Engine,40,44,41,2
+147,Pear,Sales,1,30,22,9
+148,Glasses,AI,13,31,26,5
+149,Cheerper,BigData,1,33,30,3
+150,Glasses,Design,17,42,34,8
+151,Glasses,AI,38,31,25,6
+152,Pear,Sales,50,32,26,6
+153,Glasses,BigData,20,35,30,5
+154,Pear,Design,25,36,35,1
+155,Glasses,Search Engine,38,37,31,6
+156,Glasses,AI,53,35,29,6
+157,Glasses,Search Engine,56,40,38,3
+158,Pear,Design,1,36,30,6
+159,Cheerper,Search Engine,31,39,28,9
+160,Glasses,Search Engine,42,42,42,1
+161,Glasses,Search Engine,38,40,38,2
+162,Glasses,Search Engine,74,49,48,1
+163,Cheerper,BigData,1,35,28,6
+164,Glasses,AI,1,30,22,6
+165,Pear,Design,80,47,48,1
+166,Cheerper,BigData,78,43,39,4
+167,Glasses,Support,50,37,39,1
+168,Glasses,AI,19,49,44,5
+169,Cheerper,BigData,38,43,39,5
+170,Glasses,AI,1,30,22,8
+171,Glasses,AI,30,38,32,6
+172,Pear,Design,80,40,35,5
+173,Cheerper,Support,50,44,36,7
+174,Cheerper,Support,17,34,25,9
+175,Cheerper,Search Engine,22,38,27,9
+176,Cheerper,BigData,49,30,24,7
+177,Cheerper,Support,25,32,28,4
+178,Glasses,AI,52,46,43,3
+179,Cheerper,BigData,1,33,26,7
+180,Glasses,AI,41,31,26,5
+181,Pear,Design,1,34,28,6
+182,Glasses,Design,35,33,26,8
+183,Glasses,Search Engine,43,41,40,1
+184,Pear,Sales,54,38,33,5
+185,Pear,Sales,28,49,48,1
+186,Cheerper,BigData,21,30,22,6
+187,Glasses,Search Engine,40,35,32,3
+188,Glasses,AI,46,39,35,4
+189,Glasses,AI,62,30,22,7
+190,Glasses,AI,36,42,38,3
+191,Cheerper,BigData,26,42,39,3
+192,Cheerper,Support,19,49,41,8
+193,Glasses,BigData,80,38,37,1
+194,Cheerper,Support,50,36,30,5
+195,Glasses,Search Engine,1,38,35,3
+196,Glasses,Design,67,49,48,1
+197,Cheerper,Support,49,33,28,5
+198,Glasses,AI,43,34,32,2
+199,Pear,Sales,42,49,48,2
+200,Cheerper,Search Engine,8,43,32,9
+201,Glasses,Search Engine,1,30,22,4
+202,Cheerper,BigData,8,43,32,9
+203,Cheerper,Support,80,39,39,1
+204,Cheerper,Support,70,49,48,1
+205,Glasses,AI,38,40,38,3
+206,Cheerper,Support,30,43,35,8
+207,Cheerper,Search Engine,19,40,35,5
+208,Pear,Sales,25,34,27,7
+209,Glasses,Design,28,41,35,7
+210,Glasses,Search Engine,12,33,31,2
+211,Glasses,Search Engine,58,35,28,7
+212,Cheerper,Support,1,30,22,8
+213,Glasses,AI,1,40,33,7
+214,Pear,Design,39,38,33,5
+215,Cheerper,Support,56,35,25,9
+216,Glasses,Search Engine,79,43,39,4
+217,Glasses,AI,40,35,32,4
+218,Glasses,AI,38,40,37,3
+219,Cheerper,Support,46,34,24,10
+220,Glasses,Search Engine,17,32,30,2
+221,Glasses,Search Engine,50,37,30,7
+222,Glasses,Search Engine,39,35,29,6
+223,Glasses,Search Engine,22,31,30,1
+224,Glasses,Design,70,42,38,4
+225,Glasses,AI,22,41,40,1
+226,Pear,Sales,25,38,33,5
+227,Cheerper,Support,31,41,34,7
+228,Glasses,Search Engine,55,44,40,4
+229,Glasses,Search Engine,19,35,29,6
+230,Cheerper,Search Engine,1,32,23,9
+231,Glasses,Design,13,34,25,9
+232,Glasses,AI,40,34,30,4
+233,Cheerper,BigData,35,47,45,2
+234,Glasses,Search Engine,80,45,44,1
+235,Cheerper,Support,28,49,48,1
+236,Cheerper,Support,51,42,34,8
+237,Glasses,Search Engine,24,36,30,6
+238,Glasses,Search Engine,44,43,39,4
+239,Cheerper,Search Engine,1,39,34,5
+240,Cheerper,BigData,29,38,36,2
+241,Cheerper,Search Engine,44,42,34,8
+242,Glasses,Design,22,33,26,7
+243,Pear,Sales,44,45,42,3
+244,Glasses,Design,78,45,44,1
+245,Glasses,Search Engine,28,31,25,6
+246,Cheerper,BigData,39,34,25,9
+247,Glasses,Search Engine,1,30,22,8
+248,Pear,Sales,17,39,32,7
+249,Cheerper,BigData,1,35,28,7
+250,Glasses,Design,38,30,22,8
+251,Cheerper,Search Engine,19,49,48,1
+252,Glasses,Search Engine,43,49,48,1
+253,Glasses,Search Engine,39,33,28,5
+254,Glasses,Design,37,37,29,8
+255,Cheerper,Support,80,48,48,2
+256,Glasses,Search Engine,27,42,35,7
+257,Pear,Sales,1,36,28,8
+258,Cheerper,Support,43,36,29,7
+259,Glasses,AI,22,36,30,6
+260,Glasses,Search Engine,80,34,33,1
+261,Glasses,Design,36,45,42,3
+262,Glasses,Search Engine,46,45,45,1
+263,Pear,Sales,36,40,38,2
+264,Glasses,Design,52,35,29,6
+265,Cheerper,Search Engine,26,35,29,6
+266,Glasses,Search Engine,44,34,30,4
+267,Cheerper,Search Engine,56,40,36,4
+268,Glasses,Search Engine,50,39,32,7
+269,Pear,Sales,27,36,28,8
+270,Glasses,AI,17,41,37,4
+271,Glasses,Search Engine,52,35,29,6
+272,Cheerper,Support,39,40,39,1
+273,Cheerper,Support,58,38,30,8
+274,Cheerper,Support,53,46,44,2
+275,Pear,Design,37,45,43,2
+276,Glasses,Design,21,42,39,3
+277,Cheerper,Search Engine,31,36,29,7
+278,Glasses,Search Engine,50,46,44,2
+279,Glasses,Search Engine,22,38,35,3
+280,Glasses,Search Engine,79,45,44,1
+281,Glasses,Search Engine,39,46,42,4
+282,Glasses,Design,19,39,32,7
+283,Cheerper,BigData,1,38,31,7
+284,Glasses,AI,41,38,37,1
+285,Cheerper,Search Engine,31,36,28,8
+286,Glasses,Search Engine,1,44,37,7
+287,Glasses,Search Engine,40,42,36,6
+288,Glasses,Search Engine,22,30,22,8
+289,Cheerper,BigData,25,34,28,6
+290,Cheerper,Support,55,40,36,4
+291,Glasses,AI,1,30,22,8
+292,Cheerper,Search Engine,24,42,38,4
+293,Glasses,Design,39,38,38,0
+294,Glasses,AI,78,38,38,0
+295,Glasses,Search Engine,1,44,36,8
+296,Glasses,Search Engine,27,41,34,7
+297,Glasses,Search Engine,22,35,28,7
+298,Glasses,Search Engine,1,41,34,7
+299,Cheerper,BigData,80,36,35,1
+300,Cheerper,Search Engine,56,41,34,7
+301,Cheerper,Support,41,34,28,6
+302,Glasses,Search Engine,42,30,22,8
+303,Glasses,Design,1,33,27,6
+304,Glasses,AI,35,42,38,4
+305,Cheerper,BigData,80,34,34,0
+306,Glasses,Search Engine,1,40,32,8
+307,Glasses,Search Engine,36,44,40,4
+308,Glasses,Search Engine,31,45,43,2
+309,Glasses,Search Engine,19,30,22,7
+310,Cheerper,Support,50,38,34,4
+311,Glasses,Design,1,45,38,7
+312,Cheerper,Support,24,45,45,0
+313,Glasses,AI,25,46,44,2
+314,Pear,Sales,41,41,37,4
+315,Glasses,Design,50,44,41,3
+316,Glasses,Search Engine,80,38,36,2
+317,Glasses,Search Engine,36,40,36,4
+318,Glasses,Search Engine,70,46,44,2
+319,Glasses,Search Engine,29,46,44,2
+320,Pear,Sales,1,42,36,6
+321,Pear,Design,26,41,38,2
+322,Pear,Sales,1,43,37,5
+323,Glasses,AI,13,40,36,5
+324,Pear,Design,1,39,33,6
+325,Glasses,Search Engine,1,30,22,6
+326,Pear,Design,1,30,22,6
+327,Pear,Design,10,32,28,4
+328,Cheerper,Support,15,42,39,4
+329,Glasses,Design,28,31,23,7
+330,Glasses,Design,1,41,37,5
+331,Pear,Sales,26,47,43,5
+332,Cheerper,Support,45,30,22,9
+333,Pear,Design,34,43,38,5
+334,Glasses,Search Engine,2,43,41,2
+335,Pear,AI,3,40,42,1
+336,Cheerper,Support,80,49,48,1
+337,Pear,Sales,29,38,33,5
+338,Pear,Design,19,49,48,1
+339,Pear,Sales,53,37,36,1
+340,Cheerper,Support,1,36,24,9
+341,Glasses,AI,1,31,23,7
+342,Glasses,Search Engine,30,38,30,8
+343,Glasses,Search Engine,23,36,33,4
+344,Glasses,Search Engine,9,31,22,9
+345,Glasses,Search Engine,29,36,29,7
+346,Pear,Design,75,34,28,6
+347,Glasses,AI,1,32,25,7
+348,Glasses,Design,13,34,23,9
+349,Glasses,AI,6,47,40,7
+350,Glasses,AI,42,49,48,1
+351,Glasses,AI,31,36,33,3
+352,Pear,Sales,61,33,27,6
+353,Glasses,AI,9,40,32,8
+354,Cheerper,Support,74,30,26,4
+355,Pear,Sales,20,41,38,3
+356,Glasses,Search Engine,31,48,42,5
+357,Cheerper,BigData,58,44,39,5
+358,Cheerper,Support,40,44,39,5
+359,Pear,Sales,1,30,22,7
+360,Glasses,AI,10,37,32,5
+361,Glasses,AI,36,41,40,1
+362,Glasses,AI,68,38,30,8
+363,Glasses,Search Engine,72,46,45,1
+364,Cheerper,BigData,28,36,28,8
+365,Glasses,AI,49,49,48,4
+366,Glasses,Search Engine,27,45,42,3
+367,Pear,Sales,8,36,31,4
+368,Glasses,AI,54,44,42,2
+369,Cheerper,Support,1,30,22,9
+370,Glasses,AI,68,47,44,3
+371,Glasses,AI,33,44,42,2
+372,Glasses,Search Engine,27,37,32,5
+373,Pear,Sales,14,44,40,4
+374,Glasses,AI,12,30,23,4
+375,Glasses,Design,4,49,47,4
+376,Glasses,BigData,80,32,28,5
+377,Pear,Sales,1,38,32,6
+378,Glasses,Search Engine,15,42,36,6
+379,Pear,Sales,32,35,34,2
+380,Pear,Sales,27,37,33,4
+381,Glasses,Search Engine,1,35,32,4
+382,Cheerper,Support,23,41,35,6
+383,Cheerper,Support,14,30,22,9
+384,Pear,Design,80,40,36,4
+385,Cheerper,BigData,44,49,47,2
+386,Cheerper,BigData,40,43,34,9
+387,Glasses,Design,46,46,45,1
+388,Cheerper,Support,24,42,38,5
+389,Glasses,AI,7,42,37,5
+390,Glasses,AI,18,42,36,6
+391,Glasses,Search Engine,38,49,45,4
+392,Glasses,Search Engine,1,36,29,7
+393,Pear,Design,61,45,44,1
+394,Glasses,Search Engine,47,30,26,1
+395,Cheerper,BigData,47,43,38,6
+396,Cheerper,BigData,38,30,24,6
+397,Cheerper,BigData,39,44,40,4
+398,Cheerper,Support,1,36,28,8
+399,Glasses,Search Engine,23,48,43,5
+400,Cheerper,BigData,42,32,29,3
+401,Glasses,Sales,51,49,48,2
+402,Cheerper,BigData,42,34,30,5
+403,Cheerper,BigData,48,30,24,6
+404,Glasses,AI,17,38,33,5
+405,Glasses,Search Engine,1,30,24,4
+406,Cheerper,Support,59,32,31,1
+407,Glasses,AI,17,31,24,7
+408,Pear,Sales,27,42,39,3
+409,Cheerper,BigData,3,30,22,7
+410,Cheerper,Search Engine,11,36,32,3
+411,Glasses,BigData,25,30,26,1
+412,Cheerper,BigData,60,36,31,6
+413,Pear,Sales,67,45,44,1
+414,Glasses,AI,15,30,22,7
+415,Cheerper,BigData,5,33,26,8
+416,Glasses,AI,1,30,22,9
+417,Cheerper,Support,33,40,40,1
+418,Cheerper,Search Engine,5,41,34,7
+419,Cheerper,Support,27,44,35,9
+420,Pear,Sales,18,38,39,1
+421,Cheerper,BigData,10,43,36,7
+422,Pear,AI,53,30,29,1
+423,Pear,Sales,4,36,28,7
+424,Cheerper,BigData,77,49,48,3
+425,Glasses,AI,45,34,30,4
+426,Glasses,Search Engine,22,39,38,1
+427,Pear,Sales,66,46,48,1
+428,Glasses,Design,80,36,35,2
+429,Glasses,BigData,52,37,33,4
+430,Glasses,Design,1,37,30,7
+431,Cheerper,Support,41,42,34,7
+432,Cheerper,Search Engine,21,30,22,6
+433,Glasses,Search Engine,1,30,22,8
+434,Glasses,Search Engine,42,38,36,2
+435,Glasses,Design,73,49,48,1
+436,Cheerper,BigData,57,46,37,9
+437,Pear,Design,50,38,32,6
+438,Pear,Design,13,36,29,7
+439,Pear,Sales,51,45,42,4
+440,Cheerper,Support,39,41,34,8
+441,Pear,Design,9,35,34,1
+442,Pear,Sales,40,43,40,3
+443,Glasses,AI,1,30,22,7
+444,Glasses,BigData,27,40,35,4
+445,Pear,Design,73,49,48,2
+446,Pear,Design,1,40,36,4
+447,Glasses,AI,7,40,34,6
+448,Glasses,Search Engine,34,35,30,4
+449,Cheerper,Search Engine,1,30,22,7
+450,Cheerper,BigData,65,39,36,3
+451,Cheerper,BigData,35,35,30,5
+452,Cheerper,Support,46,49,48,1
+453,Cheerper,BigData,58,30,23,5
+454,Pear,Sales,41,49,48,1
+455,Glasses,AI,40,43,42,2
+456,Cheerper,Search Engine,75,42,34,9
+457,Cheerper,Support,36,39,29,9
+458,Glasses,Search Engine,58,41,38,4
+459,Glasses,AI,44,36,31,5
+460,Glasses,AI,1,33,24,9
+461,Cheerper,BigData,43,42,34,8
+462,Pear,Sales,15,46,46,1
+463,Glasses,Design,41,30,22,9
+464,Pear,Sales,1,35,32,3
+465,Glasses,AI,44,30,25,5
+466,Glasses,Search Engine,80,47,48,1
+467,Pear,Design,51,30,28,1
+468,Cheerper,Support,54,32,29,4
+469,Glasses,Search Engine,69,44,43,1
+470,Cheerper,BigData,3,36,26,9
+471,Cheerper,Support,46,32,27,6
+472,Glasses,AI,20,34,25,9
+473,Cheerper,BigData,80,49,48,2
+474,Cheerper,Support,73,42,41,1
+475,Pear,Sales,4,30,26,3
+476,Glasses,AI,80,45,45,1
+477,Cheerper,BigData,1,40,29,9
+478,Cheerper,BigData,58,49,48,4
+479,Glasses,Design,1,35,30,6
+480,Pear,Design,4,48,46,3
+481,Cheerper,BigData,34,38,34,4
+482,Glasses,AI,5,32,26,6
+483,Cheerper,AI,55,46,40,6
+484,Glasses,Design,9,38,35,4
+485,Pear,Sales,12,32,26,6
+486,Glasses,Search Engine,21,44,45,1
+487,Pear,Sales,47,43,40,3
+488,Cheerper,BigData,80,44,38,7
+489,Glasses,AI,4,30,22,5
+490,Pear,AI,32,30,28,2
+491,Glasses,Search Engine,39,38,42,1
+492,Glasses,AI,18,36,35,2
+493,Glasses,AI,43,36,32,4
+494,Glasses,AI,37,36,29,7
+495,Pear,AI,1,36,37,1
+496,Cheerper,BigData,47,45,39,6
+497,Pear,Sales,62,39,36,3
+498,Glasses,BigData,41,38,36,3
+499,Glasses,AI,3,33,29,3
+500,Glasses,BigData,36,40,36,3
+501,Glasses,Search Engine,22,34,31,3
+502,Glasses,Search Engine,9,33,28,5
+503,Glasses,AI,33,30,22,3
+504,Pear,Design,64,35,32,3
+505,Cheerper,BigData,23,40,36,4
+506,Glasses,Search Engine,52,36,34,2
+507,Cheerper,BigData,27,30,23,7
+508,Cheerper,Support,34,44,35,9
+509,Glasses,BigData,26,37,35,2
+510,Glasses,BigData,49,32,28,3
+511,Glasses,Search Engine,1,30,22,9
+512,Glasses,AI,45,43,39,4
+513,Glasses,Design,45,40,35,6
+514,Cheerper,BigData,59,38,37,2
+515,Cheerper,Search Engine,27,35,28,7
+516,Pear,Design,32,40,38,2
+517,Pear,Sales,1,30,22,9
+518,Pear,Sales,31,30,25,5
+519,Pear,Sales,27,36,30,6
+520,google,IT,7,20,7,6
