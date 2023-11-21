@@ -1,16 +1,16 @@
 import os
 import cmd
 
-
 def ensure_db_directory():
     if not os.path.exists('dbs'):
         os.makedirs('dbs')
 
-def create_table(table_name):
+def create_table(table_name, headers):
     ensure_db_directory()
     file_name = f"dbs/{table_name}.csv"
     if not os.path.exists(file_name):
         with open(file_name, 'w') as file:
+            file.write(','.join(headers) + '\n')
             print(f"Table {table_name} created.")
     else:
         print(f"Table {table_name} already exists.")
@@ -35,79 +35,92 @@ def is_condition_met(value, operator, condition_value):
     else:
         raise ValueError(f"Unknown operator: {operator}")
 
-
 # query_data("employees.csv", [0 1 2], [2 >= 25])
-def query_data(file_name, column_indices, condition=None):
-    #print(file_name)
-    #print(column_indices)
-    #print(condition)
+def query_data(file_name, column_names, condition=None):
     with open(f"dbs/{file_name}", 'r') as file:
+        header = next(file).strip().split(',')
+        column_indices = [header.index(name) for name in column_names]
+
         for line in file:
             values = line.strip().split(',')
             if condition:
-                column_index, operator, condition_value = condition
-                if not is_condition_met(float(values[column_index]), operator, float(condition_value)):
+                condition_column_name, operator, condition_value = condition
+                condition_column_index = header.index(condition_column_name)  # Convert to index
+                if not is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
                     continue
             selected_values = [values[i] for i in column_indices]
             print(','.join(selected_values))
 
 def delete_data(file_name, condition):
+    print(condition)
     updated_lines = []
     with open(f"dbs/{file_name}.csv", 'r') as file:
+        header = next(file).strip().split(',') # Save the header
+        condition_column_index = header.index(condition[0]) # Convert condition column name to index
+
         for line in file:
             values = line.strip().split(',')
-            column_index, operator, condition_value = condition
-            if is_condition_met(float(values[column_index]), operator, float(condition_value)):
+            operator, condition_value = condition[1], condition[2]
+            if is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
                 continue  # Skip this line (row) as it meets the delete condition
             updated_lines.append(line)
 
-        with open(f"dbs/{file_name}.csv", 'w') as file:
-            for line in updated_lines:
-                file.write(line)  # Write back all lines except those to be deleted
+    with open(f"dbs/{file_name}.csv", 'w') as file:
+        file.write(','.join(header) + '\n') # Write the header back
+        for line in updated_lines:
+            file.write(line)
+
 
 def update_data(file_name, condition, updates):
     updated_lines = []
     with open(f"dbs/{file_name}.csv", 'r') as file:
+        header = next(file).strip().split(',')  # Save the header
+        condition_column_index = header.index(condition[0])  # Convert condition column name to index
+
+        # Convert update column names to indices
+        update_indices = [(header.index(col_name), new_val) for col_name, new_val in updates]
+
         for line in file:
             values = line.strip().split(',')
-            column_index, operator, condition_value = condition
-            if is_condition_met(float(values[column_index]), operator, float(condition_value)):
-                for col_idx, new_val in updates:
+            operator, condition_value = condition[1], condition[2]
+            if is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
+                for col_idx, new_val in update_indices:
                     values[col_idx] = new_val
             updated_lines.append(','.join(values))
 
     with open(f"dbs/{file_name}.csv", 'w') as file:
+        file.write(','.join(header) + '\n')  # Write the header back
         for line in updated_lines:
             file.write(line + '\n')
-def order_data(file_name, column_index, order='asc'):
+
+def order_data(file_name, column_name, order='asc'):
     with open(f"dbs/{file_name}.csv", 'r') as file:
-        # Read all lines from the file
-        lines = file.readlines()
+        header = next(file).strip().split(',')  # Read the header
+        column_index = header.index(column_name)  # Find index of the column name
 
-    # Assuming the first line is the header
-    header = lines[0].strip()
+        # Processing the data lines
+        data = [line.strip().split(',') for line in file.readlines()]
 
-    # Processing the data lines
-    data = [line.strip().split(',') for line in lines[1:]]
+        # Sorting the data based on the specified column
+        data.sort(key=lambda row: float(row[column_index]) if row[column_index].replace('.','',1).isdigit() else row[column_index],
+                  reverse=(order.lower() == 'desc'))
 
-    # Sorting the data based on the specified column
-    # The lambda function handles the data type for sorting (assumes float or int)
-    data.sort(key=lambda row: float(row[column_index]) if row[column_index].replace('.','',1).isdigit() else row[column_index],
-              reverse=(order.lower() == 'desc'))
-
-    # Print the sorted data
-    print(header)  # Print the header
-    for row in data:
-        print(','.join(row))  # Print the sorted data rows
+        # Print the sorted data
+        print(','.join(header))  # Print the header
+        for row in data:
+            print(','.join(row))  # Print the sorted data rows
 
 
-def aggregate_data(file_name, column_index, agg_function):
+def aggregate_data(file_name, column_name, agg_function):
     values = []
     with open(f"dbs/{file_name}", 'r') as file:
+        header = next(file).strip().split(',')  # Read the header
+        column_index = header.index(column_name)  # Find index of the column name
+
         for line in file:
             row = line.strip().split(',')
             values.append(float(row[column_index]))
-    # print(values)
+
     if agg_function == 'sum':
         return sum(values)
     elif agg_function == 'count':
@@ -118,46 +131,57 @@ def aggregate_data(file_name, column_index, agg_function):
         return min(values)
     elif agg_function == 'avg':
         return sum(values) / len(values) if values else 0
+def join_tables(file_name1, file_name2, join_column_name, selected_columns=None):
+    with open(f"dbs/{file_name1}", 'r') as file1, open(f"dbs/{file_name2}", 'r') as file2:
+        header1 = next(file1).strip().split(',')
+        header2 = next(file2).strip().split(',')
+        join_column_index1 = header1.index(join_column_name)
+        join_column_index2 = header2.index(join_column_name)  # Assuming the same column name in both tables
 
-def join_tables(file_name1, file_name2, join_column_index1, join_column_index2, selected_columns=None):
-    with open(f"dbs/{file_name1}.csv", 'r') as file1, open(f"dbs/{file_name2}.csv", 'r') as file2:
-        # Read and split lines from both files
         data1 = [line.strip().split(',') for line in file1.readlines()]
         data2 = [line.strip().split(',') for line in file2.readlines()]
 
-    # Create a dictionary for the second table for faster lookups
-    dict2 = {row[join_column_index2]: row for row in data2}
+        dict2 = {row[join_column_index2]: row for row in data2}
 
-    # Perform the join
-    joined_data = []
-    for row1 in data1:
-        key = row1[join_column_index1]
-        if key in dict2:
-            combined_row = row1 + dict2[key]
-            if selected_columns:
-                combined_row = [combined_row[i] for i in selected_columns]
-            joined_data.append(combined_row)
+        joined_data = []
+        for row1 in data1:
+            key = row1[join_column_index1]
+            if key in dict2:
+                combined_row = row1 + dict2[key]
 
-    # Print the joined data
-    for row in joined_data:
-        print(','.join(row))
+                if selected_columns:
+                    # Find indices for selected columns
+                    combined_indices = []
+                    for col in selected_columns:
+                        table_name, col_name = col.split('.')
+                        if table_name == file_name1.split('.')[0]:
+                            combined_indices.append(header1.index(col_name))
+                        else:
+                            combined_indices.append(len(header1) + header2.index(col_name))
+                    combined_row = [combined_row[i] for i in combined_indices]
+
+                joined_data.append(combined_row)
+
+        for row in joined_data:
+            print(','.join(row))
 
 
 def parse_and_execute(query):
     commands = query.split(' ')
     # new table employees
     if commands[0].lower() == 'new' and commands[1].lower() == 'table':
-        create_table(commands[2])
+        table_name = commands[2]
+        headers = commands[3:]
+        create_table(table_name, headers)
     # insert into employees values 1 John 30
     elif commands[0].lower() == 'insert':
-        insert_data(commands[2], ','.join(commands[4:]))
-    # give 0,1,2 from table employees where col 2 >= 25
+        insert_data(commands[1], ','.join(commands[2:]))
 
-    # delete from employees where col 2 < 30
+    # delete from employees where age = 30
     elif commands[0].lower() == 'delete':
         table_name = commands[2]
         condition_parts = query.split(' where ')[1].split(' ')
-        condition = (int(condition_parts[1]), condition_parts[2], condition_parts[3])
+        condition = (condition_parts[0], condition_parts[1], condition_parts[2])
         delete_data(f"{table_name}", condition)
         print(f"Data deleted from {table_name}.")
 
@@ -168,61 +192,65 @@ def parse_and_execute(query):
         where_clause = query.split(' where ')[1]
 
         # Parsing the SET clause
-        updates = []
-        for update_part in set_clause.split(','):
-            col_idx, new_val = update_part.split('=')
-            updates.append((int(col_idx), new_val))
+        updates = [(part.split('=')[0], part.split('=')[1]) for part in set_clause.split(',')]
 
         # Parsing the WHERE clause
         condition_parts = where_clause.split(' ')
-        condition = (int(condition_parts[1]), condition_parts[2], condition_parts[3])
+        condition_column_name = condition_parts[0]
+        operator = condition_parts[1]
+        condition_value = condition_parts[2]
+        condition = (condition_column_name, operator, condition_value)
 
         # Call update_data
         update_data(f"{table_name}", condition, updates)
         print(f"Data updated in {table_name}.")
 
+
     elif commands[0].lower() == 'give':
         query_parts = query.split(' where ')
-        # give 0,1,2 from table employees, col 2 >= 25
-        #  [0 1 2]
-        column_indices = [int(idx) for idx in query_parts[0].split(' ')[1].split(',')]
+        # give name,age from table employees where age >= 25
 
-        # "employees"
+        column_names = query_parts[0].split(' ')[1].split(',')
         table_name = query_parts[0].split(' ')[-1]
 
-        # if there is a where condition.
+        condition = None
+
+        # If there is a where condition.
         if 'where' in query:
-            # [col 2 >= 25]
             condition_parts = query_parts[1].split(' ')
-            # 2 >= 25
-            condition = (int(condition_parts[1]), condition_parts[2], condition_parts[3])
-            query_data(f"{table_name}.csv", column_indices, condition)
-        else:
-            query_data(f"{table_name}.csv", column_indices)
-    # aggregate sum|max|min|avg|count from employees on col 2
+            condition_column_name = condition_parts[0]
+            operator = condition_parts[1]
+            condition_value = condition_parts[2]
+            condition = (condition_column_name, operator, condition_value)
+
+        query_data(f"{table_name}.csv", column_names, condition)
+
+    # aggregate sum|max|min|avg|count from employees on age
     elif commands[0].lower() == 'aggregate':
         agg_function = commands[1].lower()
         table_name = commands[3]
-        column_index = int(commands[6])
+        column_name = commands[5]  # Extract the column name instead of index
 
-        result = aggregate_data(f"{table_name}.csv", column_index, agg_function)
+        result = aggregate_data(f"{table_name}.csv", column_name, agg_function)
         print(f"Aggregate {agg_function}: {result}")
-        # order employees by 2 asc
-    # order employees by 2 asc
+
+    # order employees by id asc
     elif commands[0].lower() == 'order':
         table_name = commands[1]
-        column_index = int(commands[3])
+        column_index = commands[3]
         order = commands[4] if len(commands) > 4 else 'asc'
         order_data(f"{table_name}", column_index, order)
 
-    # join employees and salaries on 0 and 1 print 0,1,2
+    # join employees and salaries id and print employees.name
     elif commands[0].lower() == 'join':
         file_name1 = commands[1]
-        file_name2 = commands[2]
-        join_column_index1 = int(commands[4])
-        join_column_index2 = int(commands[5])
-        selected_columns = [int(idx) for idx in commands[7:]] if 'print' in query else None
-        join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_index1, join_column_index2, selected_columns)
+        file_name2 = commands[3]
+        join_column_name = commands[4]
+        selected_columns = None
+        if 'print' in query:
+            print_columns = query.split('print')[1].strip().split(',')
+            selected_columns = [col.strip() for col in print_columns]  # List of 'table.column' strings
+        join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_name, selected_columns)
     else:
         print("Invalid query")
 

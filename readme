@@ -1,17 +1,21 @@
-new table employees
-insert into employees values 1,John,30
-insert into employees values 2,Tom,20
-insert into employees values 3,Amy,25
-give 0,1,2 from table employees where col 2 >= 25
-give 0,1,2 from table employees where col 2 < 25
-give 0,1,2 from table employees where col 2 = 25
-delete from employees where col 2 = 30
+new table employees id name age
+new table salaries id salary department
 
-order employees by 0 desc
-order employees by 0 asc
-update employees set 1=John, 2=35 where col 0 = 1
+insert employees 1 John 30
+insert employees 2 Tom 20
+insert employees 3 Amy 25
+
+insert salaries 1 50000 Engineering
+insert salaries 2 55000 Marketing
+insert salaries 3 52000 Marketing2
+
+give name,age from table employees where age >= 25
+delete from employees where age = 30
+update employees set name=John,age=35 where id = 1
+order employees by id desc
+aggregate sum from employees on age
+
+join employees and salaries id print employees.name
 
 
-insert into salaries values 1,50000,Engineering
-insert into salaries values 2,55000,Marketing
-insert into salaries values 3,45000,Human Resources
+
