@@ -267,122 +267,161 @@ def parse_and_execute(query):
     commands = query.split(' ')
     # new table employees
     if commands[0].lower() == 'new' and commands[1].lower() == 'table':
-        table_name = commands[2]
-        headers = commands[3:]
-        create_table(table_name, headers)
+        try:
+            table_name = commands[2]
+            headers = commands[3:]
+            create_table(table_name, headers)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
     # insert into employees values 1 John 30
     elif commands[0].lower() == 'put':
-        insert_data(commands[1], ','.join(commands[2:]))
+        try:
+            insert_data(commands[1], ','.join(commands[2:]))
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # delete from employees where age = 30
     elif commands[0].lower() == 'remove':
-        table_name = commands[2]
-        condition_parts = query.split(' where ')[1].split(' ')
-        condition = (condition_parts[0], condition_parts[1], condition_parts[2])
-        delete_data(f"{table_name}", condition)
-        print(f"Data deleted from {table_name}.")
+        try:
+            table_name = commands[2]
+            condition_parts = query.split(' where ')[1].split(' ')
+            condition = (condition_parts[0], condition_parts[1], condition_parts[2])
+            delete_data(f"{table_name}", condition)
+            print(f"Data deleted from {table_name}.")
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # update employees set 1=John, 2=35 where col 0 = 1
     elif commands[0].lower() == 'renew':
-        table_name = commands[1]
-        set_clause = query.split(' put ')[1].split(' where ')[0]
-        where_clause = query.split(' where ')[1]
+        try:
+            table_name = commands[1]
+            set_clause = query.split(' put ')[1].split(' where ')[0]
+            where_clause = query.split(' where ')[1]
 
-        # Parsing the SET clause
-        updates = [(part.split('=')[0], part.split('=')[1]) for part in set_clause.split(',')]
+            # Parsing the SET clause
+            updates = [(part.split('=')[0], part.split('=')[1]) for part in set_clause.split(',')]
 
-        # Parsing the WHERE clause
-        condition_parts = where_clause.split(' ')
-        condition_column_name = condition_parts[0]
-        operator = condition_parts[1]
-        condition_value = condition_parts[2]
-        condition = (condition_column_name, operator, condition_value)
-
-        # Call update_data
-        update_data(f"{table_name}", condition, updates)
-        print(f"Data updated in {table_name}.")
-
-
-    elif commands[0].lower() == 'give':
-        query_parts = query.split(' where ')
-        # give name,age from table employees where age >= 25
-
-        column_names = query_parts[0].split(' ')[1].split(',')
-        table_name = query_parts[0].split(' ')[-1]
-
-        condition = None
-
-        # If there is a where condition.
-        if 'where' in query:
-            condition_parts = query_parts[1].split(' ')
+            # Parsing the WHERE clause
+            condition_parts = where_clause.split(' ')
             condition_column_name = condition_parts[0]
             operator = condition_parts[1]
             condition_value = condition_parts[2]
             condition = (condition_column_name, operator, condition_value)
 
-        query_data(f"{table_name}.csv", column_names, condition)
+            # Call update_data
+            update_data(f"{table_name}", condition, updates)
+            print(f"Data updated in {table_name}.")
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
+    elif commands[0].lower() == 'give':
+        try:
+            query_parts = query.split(' where ')
+            # give name,age from table employees where age >= 25
+
+            column_names = query_parts[0].split(' ')[1].split(',')
+            table_name = query_parts[0].split(' ')[-1]
+
+            condition = None
+
+            # If there is a where condition.
+            if 'where' in query:
+                condition_parts = query_parts[1].split(' ')
+                condition_column_name = condition_parts[0]
+                operator = condition_parts[1]
+                condition_value = condition_parts[2]
+                condition = (condition_column_name, operator, condition_value)
+
+            query_data(f"{table_name}.csv", column_names, condition)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # aggregate sum|max|min|avg|count from employees on age
     elif commands[0].lower() == 'aggregate':
-        agg_function = commands[1].lower()
-        table_name = commands[3]
-        column_name = commands[5]  # Extract the column name instead of index
+        try:
+            agg_function = commands[1].lower()
+            table_name = commands[3]
+            column_name = commands[5]  # Extract the column name instead of index
 
-        result = aggregate_data(f"{table_name}.csv", column_name, agg_function)
-        print(f"Aggregate {agg_function}: {result}")
+            result = aggregate_data(f"{table_name}.csv", column_name, agg_function)
+            print(f"Aggregate {agg_function}: {result}")
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # order employees by id asc
     elif commands[0].lower() == 'order':
-        table_name = commands[1]
-        column_index = commands[3]
-        order = commands[4] if len(commands) > 4 else 'asc'
-        order_data(f"{table_name}", column_index, order)
+        try:
+            table_name = commands[1]
+            column_index = commands[3]
+            order = commands[4] if len(commands) > 4 else 'asc'
+            order_data(f"{table_name}", column_index, order)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # join employees and salaries id and print employees.name
     elif commands[0].lower() == 'join':
-        file_name1 = commands[1]
-        file_name2 = commands[3]
-        join_column_name = commands[4]
-        selected_columns = None
-        if 'print' in query:
-            print_columns = query.split('print')[1].strip().split(',')
-            selected_columns = [col.strip() for col in print_columns]  # List of 'table.column' strings
-        join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_name, selected_columns)
+        try:
+            file_name1 = commands[1]
+            file_name2 = commands[3]
+            join_column_name = commands[4]
+            selected_columns = None
+            if 'print' in query:
+                print_columns = query.split('print')[1].strip().split(',')
+                selected_columns = [col.strip() for col in print_columns]  # List of 'table.column' strings
+            join_tables(f"{file_name1}.csv", f"{file_name2}.csv", join_column_name, selected_columns)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     elif commands[0].lower() == 'group':
-        group_by_column = commands[1]
-        table_name_index = commands.index('from') + 1
-        table_name = commands[table_name_index]
-        print_columns_index = commands.index('print') + 1
-        print_columns = commands[print_columns_index:]
+        try:
+            group_by_column = commands[1]
+            table_name_index = commands.index('from') + 1
+            table_name = commands[table_name_index]
+            print_columns_index = commands.index('print') + 1
+            print_columns = commands[print_columns_index:]
 
-        grouped_data = group_data(f"dbs/{table_name}.csv", group_by_column, print_columns)
+            grouped_data = group_data(f"dbs/{table_name}.csv", group_by_column, print_columns)
 
-        for key, rows in grouped_data.items():
-            print(f"Group: {key}")
-            for row in rows:
-                print(', '.join([f"{col}: {row[col]}" for col in row]))
+            for key, rows in grouped_data.items():
+                print(f"Group: {key}")
+                for row in rows:
+                    print(', '.join([f"{col}: {row[col]}" for col in row]))
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
 
     # complex company_employee_details.company,company_employee_details.department,company_employees_salaries.salary from table company_employee_details join company_employees_salaries where years_in_company > 5 order by salary asc
     elif commands[0].lower() == "complex":
-        parts = query.split(' ', 4)  # Splitting only first four words to handle complex queries
-        selected_columns = parts[2].split(',')
-        table1, join_op, table2 = parts[4].split(' join ')
-        join_column = join_op.split(' ')[-1]
-        where_clause = ' '.join(parts[4].split(' where ')[1:])
-        condition_str, order_clause = where_clause.split(' order by ')
-        order_column, order_direction = order_clause.split(' ')
+        try:
+            parts = query.split(' ', 4)  # Splitting only first four words to handle complex queries
+            selected_columns = parts[2].split(',')
+            table1, join_op, table2 = parts[4].split(' join ')
+            join_column = join_op.split(' ')[-1]
+            where_clause = ' '.join(parts[4].split(' where ')[1:])
 
-        # Correcting file paths
-        file1 = f"dbs/{table1}.csv"
-        file2 = f"dbs/{table2}.csv"
+            # Check if 'order by' exists in the clause
+            if ' order by ' in where_clause:
+                condition_str, order_clause = where_clause.split(' order by ')
+                order_column, order_direction = order_clause.split(' ')
+            else:
+                condition_str = where_clause
+                order_column, order_direction = None, None
 
-        # Parsing condition string
-        condition_column, operator, condition_value = condition_str.split(' ')
-        condition = (condition_column.strip(), operator.strip(), condition_value.strip())
+            # Debug prints
+            print("Condition String:", condition_str)
+            print("Order Column:", order_column)
+            print("Order Direction:", order_direction)
 
-        complex_query_execute(file1, file2, join_column, condition, selected_columns, order_column, order_direction)
+            # Correcting file paths
+            file1 = f"dbs/{table1}.csv"
+            file2 = f"dbs/{table2}.csv"
 
+            # Parsing condition string
+            condition_column, operator, condition_value = condition_str.split(' ')
+            condition = (condition_column.strip(), operator.strip(), condition_value.strip())
+
+            complex_query_execute(file1, file2, join_column, condition, selected_columns, order_column, order_direction)
+        except ValueError as e:
+            print(f"Error processing complex query: {e}")
     else:
         print("Invalid query")
 
