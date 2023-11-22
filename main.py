@@ -9,6 +9,7 @@ def ensure_db_directory():
         os.makedirs('dbs')
 
 
+# For test create
 def create_table(table_name, headers):
     ensure_db_directory()
     file_name = f"dbs/{table_name}.csv"
@@ -21,6 +22,7 @@ def create_table(table_name, headers):
 
 
 # insert into employees values 1,John,30
+# for test insert.
 def insert_data(file_name, data):
     with open(f"dbs/{file_name}.csv", 'a') as file:
         file.write(f"{data}\n")
@@ -80,6 +82,7 @@ def delete_data(file_name, condition):
 
 
 # Lazy Reading for Querying Data
+# lazy reading test.
 def query_data_lazy(file_name, column_names, condition=None):
     with open(f"dbs/{file_name}", 'r') as file:
         header = file.readline().strip().split(',')
@@ -101,6 +104,7 @@ data_buffer = []
 
 
 # Buffered Writing for Inserting Data
+# Buffered writing for saving memory
 def insert_data_buffered(file_name, data):
     data_buffer.append(data)
     if len(data_buffer) >= buffer_limit:
@@ -266,6 +270,7 @@ def complex_query_execute(file_name1, file_name2, join_column_name, condition, s
 def parse_and_execute(query):
     commands = query.split(' ')
     # new table employees
+    # the database will be read in chunks when reading the buffer limit.
     if commands[0].lower() == 'new' and commands[1].lower() == 'table':
         try:
             table_name = commands[2]
