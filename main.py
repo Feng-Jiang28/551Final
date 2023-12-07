@@ -9,6 +9,72 @@ def ensure_db_directory():
         os.makedirs('dbs')
 
 
+def get_partition_file_name(table_name, id_value, partition_size=1000):
+    partition_index = id_value // partition_size
+    return f"dbs/{table_name}_part_{partition_index}.csv"
+
+
+def create_table_partition(table_name, headers):
+    ensure_db_directory()
+    # Create initial partion file
+    file_name = f"dbs/{table_name}_part_0.csv"
+    if not os.path.exists(file_name):
+        with open(file_name, 'w') as file:
+            file.write(','.join(headers) + '\n')
+            print(f"Initial partition for table {table_name} created.")
+    else:
+        print(f"Table {table_name} already exists.")
+
+
+def insert_data_partition(table_name, data):
+    id_value = int(data.split(',')[0])  # Assuming the first value is the ID for partitioning
+    file_name = get_partition_file_name(table_name, id_value)
+    with open(file_name, 'a') as file:
+        file.write(f"{data}\n")
+        print(f"Data inserted into {file_name}.")
+
+
+def query_data_partition(table_name, column_names, condition=None):
+    for file_name in os.listdir('dbs'):
+        if file_name.startswith(table_name):
+            with open(f"dbs/{file_name}", 'r') as file:
+                header = next(file).strip().split(',')
+                column_indices = [header.index(name) for name in column_names]
+
+                for line in file:
+                    values = line.strip().split(',')
+                    if condition:
+                        condition_column_name, operator, condition_value = condition
+                        condition_column_index = header.index(condition_column_name)
+                        if not is_condition_met(float(values[condition_column_index]), operator,
+                                                float(condition_value)):
+                            continue
+                    selected_values = [values[i] for i in column_indices]
+                    print(','.join(selected_values))
+
+
+def delete_data_partition(table_name, condition):
+    print(condition)
+    for file_name in os.listdir('dbs'):
+        if file_name.startswith(table_name):
+            updated_lines = []
+            with open(f"dbs/{file_name}", 'r') as file:
+                header = next(file).strip().split(',')  # Save the header
+                condition_column_index = header.index(condition[0])  # Convert condition column name to index
+
+                for line in file:
+                    values = line.strip().split(',')
+                    operator, condition_value = condition[1], condition[2]
+                    if is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
+                        continue  # Skip this line (row) as it meets the delete condition
+                    updated_lines.append(line)
+
+            with open(f"dbs/{file_name}", 'w') as file:
+                file.write(','.join(header) + '\n')  # Write the header back
+                for line in updated_lines:
+                    file.write(line)
+
+
 # For test create
 def create_table(table_name, headers):
     ensure_db_directory()
@@ -42,6 +108,25 @@ def is_condition_met(value, operator, condition_value):
         return value <= condition_value
     else:
         raise ValueError(f"Unknown operator: {operator}")
+
+
+def filter_data_in_chunks(file_name, filter_function, chunk_size=1024):
+    """
+    Filters data from a file in chunks.
+
+    :param file_name: Path to the file.
+    :param filter_function: Function that returns True for rows to keep.
+    :param chunk_size: Number of lines to read at once.
+    :return: Generator that yields filtered data.
+    """
+    with open(file_name, 'r') as file:
+        while True:
+            lines = [file.readline() for _ in range(chunk_size)]
+            if not lines:
+                break
+            for line in lines:
+                if filter_function(line):
+                    yield line
 
 
 # query_data("employees.csv", [0 1 2], [2 >= 25])
@@ -116,6 +201,62 @@ def flush_buffer(file_name):
         for data in data_buffer:
             file.write(f"{data}\n")
     data_buffer.clear()
+
+
+def update_data_partition(table_name, condition, updates):
+    for file_name in os.listdir('dbs'):
+        if file_name.startswith(table_name):
+            updated_lines = []
+            with open(f"dbs/{file_name}", 'r') as file:
+                header = next(file).strip().split(',')  # Save the header
+                condition_column_index = header.index(condition[0])  # Convert condition column name to index
+
+                # Convert update column names to indices
+                update_indices = [(header.index(col_name), new_val) for col_name, new_val in updates]
+
+                for line in file:
+                    values = line.strip().split(',')
+                    operator, condition_value = condition[1], condition[2]
+                    if is_condition_met(float(values[condition_column_index]), operator, float(condition_value)):
+                        for col_idx, new_val in update_indices:
+                            values[col_idx] = new_val
+                    updated_lines.append(','.join(values))
+
+            with open(f"dbs/{file_name}", 'w') as file:
+                file.write(','.join(header) + '\n')  # Write the header back
+                for line in updated_lines:
+                    file.write(line + '\n')
+
+
+def order_data_partition(table_name, column_name, order='asc'):
+    aggregated_data = []
+    header = None
+
+    for file_name in os.listdir('dbs'):
+        if file_name.startswith(table_name):
+            with open(f"dbs/{file_name}", 'r') as file:
+                if not header:
+                    header = next(file).strip().split(',')  # Read the header only once
+                    column_index = header.index(column_name)  # Find index of the column name
+
+                # Skip the header for subsequent files
+                next(file) if header else None
+
+                # Processing the data lines
+                data = [line.strip().split(',') for line in file.readlines()]
+                aggregated_data.extend(data)
+
+    # Sorting the aggregated data based on the specified column
+    aggregated_data.sort(
+        key=lambda row: float(row[column_index]) if row[column_index].replace('.', '', 1).isdigit() else row[
+            column_index],
+        reverse=(order.lower() == 'desc'))
+
+    # Print the sorted data
+    if header:
+        print(','.join(header))  # Print the header
+        for row in aggregated_data:
+            print(','.join(row))  # Print the sorted data rows
 
 
 def update_data(file_name, condition, updates):
@@ -235,6 +376,27 @@ def group_data(file_name, group_by_column, print_columns):
     return grouped_data
 
 
+def group_data_partition(table_name, group_by_column, print_columns):
+    grouped_data = defaultdict(list)
+
+    for file_name in os.listdir('dbs'):
+        if file_name.startswith(table_name):
+            with open(f"dbs/{file_name}", mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    group_key = row[group_by_column]
+                    grouped_data[group_key].append({col: row[col] for col in print_columns})
+
+    # Optionally, you can print the grouped data here
+    # for group, rows in grouped_data.items():
+    #     print(f"Group: {group}")
+    #     for row in rows:
+    #         print(', '.join(f"{key}: {value}" for key, value in row.items()))
+    #     print()  # Empty line for better separation between groups
+
+    return grouped_data
+
+
 def complex_query_execute(file_name1, file_name2, join_column_name, condition, selected_columns, order_column,
                           order='asc'):
     # Join, filter, and order the data from two CSV files
@@ -279,9 +441,24 @@ def parse_and_execute(query):
         except Exception as e:
             print(f"Error processing complex query: {e}")
     # insert into employees values 1 John 30
+
+    elif commands[0].lower() == 'new_p' and commands[1].lower() == 'table':
+        try:
+            table_name = commands[2]
+            headers = commands[3:]
+            create_table_partition(table_name, headers)  # Replaced create_table with create_table_partition
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
     elif commands[0].lower() == 'put':
         try:
             insert_data(commands[1], ','.join(commands[2:]))
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
+    elif commands[0].lower() == 'put_p':
+        try:
+            insert_data_partition(commands[1], ','.join(commands[2:]))
         except Exception as e:
             print(f"Error processing complex query: {e}")
 
@@ -292,6 +469,17 @@ def parse_and_execute(query):
             condition_parts = query.split(' where ')[1].split(' ')
             condition = (condition_parts[0], condition_parts[1], condition_parts[2])
             delete_data(f"{table_name}", condition)
+            print(f"Data deleted from {table_name}.")
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
+        # delete from employees where age = 30
+    elif commands[0].lower() == 'remove_p':
+        try:
+            table_name = commands[2]
+            condition_parts = query.split(' where ')[1].split(' ')
+            condition = (condition_parts[0], condition_parts[1], condition_parts[2])
+            delete_data_partition(f"{table_name}", condition)
             print(f"Data deleted from {table_name}.")
         except Exception as e:
             print(f"Error processing complex query: {e}")
@@ -319,6 +507,29 @@ def parse_and_execute(query):
         except Exception as e:
             print(f"Error processing complex query: {e}")
 
+            # update employees set 1=John, 2=35 where col 0 = 1
+    elif commands[0].lower() == 'renew_p':
+        try:
+            table_name = commands[1]
+            set_clause = query.split(' put ')[1].split(' where ')[0]
+            where_clause = query.split(' where ')[1]
+
+            # Parsing the SET clause
+            updates = [(part.split('=')[0], part.split('=')[1]) for part in set_clause.split(',')]
+
+            # Parsing the WHERE clause
+            condition_parts = where_clause.split(' ')
+            condition_column_name = condition_parts[0]
+            operator = condition_parts[1]
+            condition_value = condition_parts[2]
+            condition = (condition_column_name, operator, condition_value)
+
+            # Call update_data
+            update_data_partition(f"{table_name}", condition, updates)
+            print(f"Data updated in {table_name}.")
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
     elif commands[0].lower() == 'give':
         try:
             query_parts = query.split(' where ')
@@ -341,8 +552,32 @@ def parse_and_execute(query):
         except Exception as e:
             print(f"Error processing complex query: {e}")
 
+
+    elif commands[0].lower() == 'give_p':
+        try:
+            query_parts = query.split(' where ')
+            # give name,age from table employees where age >= 25
+
+            column_names = query_parts[0].split(' ')[1].split(',')
+            table_name = query_parts[0].split(' ')[-1]
+
+            condition = None
+
+            # If there is a where condition.
+            if 'where' in query:
+                condition_parts = query_parts[1].split(' ')
+                condition_column_name = condition_parts[0]
+                operator = condition_parts[1]
+                condition_value = condition_parts[2]
+                condition = (condition_column_name, operator, condition_value)
+
+            query_data_partition(f"{table_name}.csv", column_names, condition)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
+
     # aggregate sum|max|min|avg|count from employees on age
-    elif commands[0].lower() == 'aggregate':
+    elif commands[0].lower() == 'aggregate_p':
         try:
             agg_function = commands[1].lower()
             table_name = commands[3]
@@ -360,6 +595,16 @@ def parse_and_execute(query):
             column_index = commands[3]
             order = commands[4] if len(commands) > 4 else 'asc'
             order_data(f"{table_name}", column_index, order)
+        except Exception as e:
+            print(f"Error processing complex query: {e}")
+
+        # order employees by id asc
+    elif commands[0].lower() == 'order_p':
+        try:
+            table_name = commands[1]
+            column_index = commands[3]
+            order = commands[4] if len(commands) > 4 else 'asc'
+            order_data_partition(f"{table_name}", column_index, order)
         except Exception as e:
             print(f"Error processing complex query: {e}")
 
